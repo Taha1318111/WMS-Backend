@@ -1,19 +1,19 @@
 const Product = require("../../models/Products/productModel");
 
 const CreateProduct = async (data) => {
-
   if (!data.productId || !data.productName) {
     throw new Error("Product ID and Product Name are required");
   }
 
-  const existing = await Product.findOne({ productId: data.productId });
-
-  if (existing) {
-    throw new Error("Product ID already exists");
+  try {
+    const product = new Product(data);
+    return await product.save();
+  } catch (error) {
+    if (error.code === 11000) {
+      throw new Error("Product ID already exists");
+    }
+    throw error;
   }
-
-  const newProduct = new Product(data);
-  return await newProduct.save();
 };
 //  Find All
 const findAllProducts = async () => {

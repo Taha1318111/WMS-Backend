@@ -21,7 +21,7 @@ const getWarehouseById=async(warehouseId)=>{
     if(!warehouseId){
         throw new Error("Warehouse ID is required");
     } 
-    const warehouse=await warehouseModel.findOne({warehouseId, isActive: true,isDelete: false});
+    const warehouse=await warehouseModel.findOne({warehouseId, isActive: true,isDeleted: false});
     if(!warehouse){
         throw new Error("Warehouse not found");
     }
@@ -36,7 +36,7 @@ const getWarehouseById=async(warehouseId)=>{
 
     const filter = {
         isActive: true,
-        isDelete: false
+        isDeleted: false
     };
 
     const warehouses = await warehouseModel.find(filter)
@@ -58,7 +58,7 @@ const updateWarehouseService = async (warehouseId, payload) => {
     const existingWarehouse = await warehouseModel.findOne({
         warehouseId: warehouseId,
         isActive: true,
-        isDelete: false
+        isDeleted: false
     });
 
     if (!existingWarehouse) {
@@ -86,7 +86,7 @@ const softDeleteWarehouseService = async (warehouseId) => {
     //  Check if warehouse exists and not already deleted
     const existingWarehouse = await warehouseModel.findOne({
         warehouseId: warehouseId,
-        isDelete: false
+        isDeleted: false
     });
 
     if (!existingWarehouse) {
@@ -98,7 +98,7 @@ const softDeleteWarehouseService = async (warehouseId) => {
         { warehouseId: warehouseId },
         {
             $set: {
-                isDelete: true,
+                isDeleted: true,
                 isActive: false,
                 DeletedAt: new Date()
             }

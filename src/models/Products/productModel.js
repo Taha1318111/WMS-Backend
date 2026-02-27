@@ -1,79 +1,61 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const productSchema = new mongoose.Schema({
-  // --- PRIMARY IDENTIFIERS ---
-  productId: { type: String, required: true, unique: true, index: true }, // Barcode ya SKU
-  productTypeId: { type: String },//ye cheez frontend se aayegi
-  facilityId: { type: String },
+const productSchema = new mongoose.Schema(
+  {
+    // --- PRIMARY IDENTIFIERS ---
+    productId: { type: String, required: true },
+    productTypeId: { type: String },
+    facilityId: { type: String },
 
-  // --- NAMES & DESCRIPTIONS ---
-  productName: { type: String, trim: true ,required: true},
-  internalName: { type: String, trim: true },
-  brandName: { type: String, trim: true },
-  description: { type: String },
-  longDescription: { type: String },
-  comments: { type: String },
+    // --- NAMES & DESCRIPTIONS ---
+    productName: { type: String, trim: true, required: true },
+    internalName: { type: String, trim: true },
+    brandName: { type: String, trim: true },
+    description: { type: String },
+    longDescription: { type: String },
+    comments: { type: String },
 
-  // --- DATES & STATUS ---
-  introductionDate: { type: Date },
-  releaseDate: { type: Date },
-  supportDiscontinuationDate: { type: Date },
-  salesDiscontinuationDate: { type: Date },
-  salesDiscWhenNotAvail: { type: String, maxLength: 1 }, // char(1)
-  isVirtual: { type: String, maxLength: 1 },
-  isVariant: { type: String, maxLength: 1 },
+    // --- INVENTORY ---
+    quantityUomId: { type: String },
+    quantityIncluded: { type: Number },
+    piecesIncluded: { type: Number },
 
-  // --- IMAGES ---
-  smallImageUrl: { type: String },
-  mediumImageUrl: { type: String },
-  largeImageUrl: { type: String },
-  detailImageUrl: { type: String },
-  originalImageUrl: { type: String },
+    weightUomId: { type: String },
+    productWeight: { type: Number },
+    shippingWeight: { type: Number },
 
-  // --- INVENTORY & SHIPPING ---
-  inventoryMessage: { type: String },
-  requireInventory: { type: String, maxLength: 1 },
-  inventoryItemTypeId: { type: String },
-  quantityUomId: { type: String }, // Unit of Measure
-  quantityIncluded: { type: Number },
-  piecesIncluded: { type: Number },
-  
-  // Weights & Dimensions (Decimal fields are Numbers in Mongo)
-  weightUomId: { type: String },
-  productWeight: { type: Number },
-  shippingWeight: { type: Number },
-  
-  heightUomId: { type: String },
-  productHeight: { type: Number },
-  shippingHeight: { type: Number },
-  
-  widthUomId: { type: String },
-  productWidth: { type: Number },
-  shippingWidth: { type: Number },
-  
-  depthUomId: { type: String },
-  productDepth: { type: Number },
-  shippingDepth: { type: Number },
+    // --- PRICING ---
+    fixedAmount: { type: Number },
 
-  // --- PRICING & TAX ---
-  priceDetailText: { type: String },
-  fixedAmount: { type: Number },
-  taxable: { type: String, maxLength: 1 },
-  returnable: { type: String, maxLength: 1 },
-  chargeShipping: { type: String, maxLength: 1 },
+    // --- SOFT DELETE ---
+    isDeleted: { type: Boolean, default: false },
+    deletedAt: { type: Date, default: null },
 
-  // --- METADATA & STAMPS ---
-  createdByUserIdLogin: { type: String },
-  lastModifiedByUserIdLogin: { type: String },
-  lotIdFilledIn: { type: String },
-  isDeleted: {type: Boolean,default: false},
-  deletedAt: {type: Date,default: null},
+    // --- METADATA ---
+    createdByUserIdLogin: { type: String },
+    lastModifiedByUserIdLogin: { type: String },
+  },
+  {
+    timestamps: { createdAt: "createdStamp", updatedAt: "lastUpdatedStamp" },
+  }
+);
 
-  categoryId: {type: String,required: false} // Foreign key to Category
+//
+// ✅ PARTIAL UNIQUE INDEX (IMPORTANT)
+//
+productSchema.index(
+  { productId: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { isDeleted: false },
+  }
+);
 
-}, { 
-  // Yeh automatically CreatedAt aur UpdatedAt handle karega
-  timestamps: { createdAt: 'createdStamp', updatedAt: 'lastUpdatedStamp' } 
+//
+// ✅ GLOBAL FILTER (Hide Deleted Automatically)
+//
+productSchema.pre(/^find/, function () {
+  this.where({ isDeleted: false });
 });
 
-module.exports = mongoose.model('Product', productSchema);
+module.exports = mongoose.model("Product", productSchema);

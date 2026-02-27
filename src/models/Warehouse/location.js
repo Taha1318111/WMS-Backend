@@ -12,7 +12,7 @@ const ZONE_SHORT = {
 const locationSchema = new Schema({
     locationId:{ 
         type:String, 
-        unique:true, 
+         
         index:true 
     },
 
@@ -35,7 +35,7 @@ const locationSchema = new Schema({
     currentCapacityUsed: { type: Number, default: 0 },
 
     isActive: { type: Boolean, default: true },
-    createdBy: { type: Schema.Types.ObjectId, ref: "User" },
+    // createdBy: { type: Schema.Types.ObjectId, ref: "User" },
     isDeleted: { type: Boolean, default: false },
     DeletedAt: { type: Date },
     DeletedBy: { type: Schema.Types.ObjectId, ref: "User" }
@@ -49,5 +49,5 @@ locationSchema.index(
   { warehouseId: 1, aisle: 1, rack: 1, bin: 1, zone: 1 },
   { unique: true }
 );
-
+locationSchema.index({ warehouseId: 1 });
 module.exports = mongoose.model('Location', locationSchema);

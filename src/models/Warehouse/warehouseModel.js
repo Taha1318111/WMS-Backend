@@ -14,7 +14,7 @@ const warehouseSchema = new Schema({
     PostalCode:{type:String},
     Country:{type:String},
     isActive:{type:Boolean, default:true},
-    isDelete:{type:Boolean, default:false},
+    isDeleted:{type:Boolean, default:false},
     DeletedAt:{type:Date}
 
 },{
