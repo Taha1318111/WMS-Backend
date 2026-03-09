@@ -2,8 +2,19 @@ const productService = require("../../services/Product/ProductServices");
 
 const createProduct = async (req, res) => {
   try {
-    const product = await productService.CreateProduct(req.body);
-    res.status(201).json({ message: "Product created successfully", product });
+
+    const productData = {
+      ...req.body,
+      imageUrl: req.file ? `uploads/products/${req.file.filename}` : null
+    };
+
+    const product = await productService.CreateProduct(productData);
+
+    res.status(201).json({
+      message: "Product created successfully",
+      product
+    });
+
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -11,10 +22,29 @@ const createProduct = async (req, res) => {
 //  Find All
 const getAllProducts = async (req, res) => {
   try {
-    const products = await productService.findAllProducts();
-    res.status(200).json(products);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+
+    const result = await productService.findAllProducts(page, limit);
+
+    res.json({
+      success: true,
+      total: result.total,
+      page: result.page,
+      totalPages: result.totalPages,
+      data: result.data
+    });
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      success: false,
+      message: err.message
+    });
+
   }
 };
 

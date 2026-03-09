@@ -14,16 +14,51 @@ const locationRoutes = require("./src/routes/warehouse/location");
 
 const app = express();
 
+
+// ✅ CORS FIRST (VERY IMPORTANT)
+app.use(cors({
+  origin: true,
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization","ngrok-skip-browser-warning"], methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+}));
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS"
+  );
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
+  next();
+});
+
+
 // Middleware
 app.use(express.json());
+const path = require("path");
+
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "../uploads"))
+);
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+
 
 // Public Route
 app.use("/api/auth", authRoutes);
 
+
 // Protected Routes
 app.use("/api/products", authMiddleware, productRoutes);
+
 app.use("/api/categories", authMiddleware, categoryRoutes);
 
 app.use(
@@ -40,10 +75,12 @@ app.use(
   locationRoutes
 );
 
+
 // DB Connection
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected"))
-  .catch(err => console.log("DB Error:", err));
+.then(() => console.log("MongoDB Connected"))
+.catch(err => console.log("DB Error:", err));
+
 
 const PORT = process.env.PORT || 5000;
 

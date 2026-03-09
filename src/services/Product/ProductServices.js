@@ -1,25 +1,41 @@
 const Product = require("../../models/Products/productModel");
 
-const CreateProduct = async (data) => {
-  if (!data.productId || !data.productName) {
-    throw new Error("Product ID and Product Name are required");
-  }
-
-  try {
-    const product = new Product(data);
-    return await product.save();
-  } catch (error) {
-    if (error.code === 11000) {
-      throw new Error("Product ID already exists");
+  const CreateProduct = async (data) => {
+    if (!data.productId || !data.productName) {
+      throw new Error("Product ID and Product Name are required");
     }
-    throw error;
-  }
-};
-//  Find All
-const findAllProducts = async () => {
-  return await Product.find({ isDeleted: false });
-};
 
+    try {
+      const product = new Product(data);
+      return await product.save();
+    } catch (error) {
+      if (error.code === 11000) {
+        throw new Error("Product ID already exists");
+      }
+      throw error;
+    }
+  };
+//  Find All
+const findAllProducts = async (page = 1, limit = 10) => {
+
+  const skip = (page - 1) * limit;
+
+  const products = await Product.find({ isDeleted: false })
+    .skip(skip)
+    .limit(limit);
+
+  const total = await Product.countDocuments({ isDeleted: false });
+
+  const totalPages = Math.ceil(total / limit);
+
+  return {
+    total,
+    page,
+    limit,
+    totalPages,
+    data: products
+  };
+};
 //  Find By ProductId
 const findProductById = async (productId) => {
 

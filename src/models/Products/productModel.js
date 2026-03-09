@@ -27,6 +27,9 @@ const productSchema = new mongoose.Schema(
     // --- PRICING ---
     fixedAmount: { type: Number },
 
+    // image
+    imageUrl: {type: String},
+
     // --- SOFT DELETE ---
     isDeleted: { type: Boolean, default: false },
     deletedAt: { type: Date, default: null },
