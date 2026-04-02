@@ -7,4 +7,5 @@ router.get("/GetWarehouseById/:id", warehouseCont.getWarehouseById);
 router.get("/GetAllWarehouses", warehouseCont.getAllWarehouses);
 router.put("/UpdateWarehouse/:id", warehouseCont.updateWarehouse);
 router.delete("/SoftDeleteWarehouse/:id", warehouseCont.softDeleteWarehouse);
+router.get("/AllWarehouseId", warehouseCont.getAllwarehousesId);
 module.exports = router;

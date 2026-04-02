@@ -5,9 +5,11 @@ const createProduct = async (req, res) => {
 
     const productData = {
       ...req.body,
-      imageUrl: req.file ? `uploads/products/${req.file.filename}` : null
+      imageUrl: req.file
+        ? `uploads/products/${req.file.filename}`
+        : null
     };
-
+    console.log("Received product data:", productData);
     const product = await productService.CreateProduct(productData);
 
     res.status(201).json({
@@ -57,6 +59,16 @@ const getProductById = async (req, res) => {
     res.status(404).json({ message: error.message });
   }
 };
+
+const AllProductId=async(req,res)=>{
+  try {
+    const productIds = await productService.AllProductId();
+    res.status(200).json({ productIds });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+
+};
 const updateProduct = async (req, res) => {
   try {
     const updated = await productService.updateProduct(
@@ -86,5 +98,5 @@ const deleteProduct = async (req, res) => {
   }
 };
 module.exports = {
-  createProduct,getAllProducts,getProductById,updateProduct,deleteProduct
+  createProduct, getAllProducts, getProductById, updateProduct, deleteProduct,AllProductId
 };

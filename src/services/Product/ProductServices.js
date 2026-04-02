@@ -54,7 +54,6 @@ const updateProduct = async (productId, data) => {
     { $set: data },
     { new: true }
   );
-
   if (!updated) {
     throw new Error("Product not found");
   }
@@ -79,6 +78,12 @@ const softDeleteProduct = async (productId) => {
 
   return { message: "Product deleted successfully" };
 };
+
+const AllProductId=async()=>{
+  const products = await Product.find({ isDeleted: false }).select('productId -_id');
+  return products.map(p => p.productId);
+
+}
 module.exports = {
-  CreateProduct, findAllProducts, findProductById, updateProduct, softDeleteProduct
+  CreateProduct, findAllProducts, findProductById, updateProduct, softDeleteProduct,AllProductId
 };

@@ -109,4 +109,8 @@ const softDeleteWarehouseService = async (warehouseId) => {
     return deletedWarehouse;
 };
 
-module.exports={createWarehouse, getWarehouseById, getAllWarehouses, updateWarehouseService,softDeleteWarehouseService}
+const AllWarehouseId=async()=>{
+    const warehouses = await warehouseModel.find({ isDeleted: false }).select('warehouseId -_id');
+    return warehouses.map(w => w.warehouseId);
+}
+module.exports={createWarehouse, getWarehouseById, getAllWarehouses, updateWarehouseService,softDeleteWarehouseService, AllWarehouseId}

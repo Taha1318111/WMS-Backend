@@ -198,11 +198,17 @@ const softDeleteLocationService = async (locationId, user) => {
 
   return deleted;
 };
+
+const AllLocationId=async()=>{
+  const locations = await locationModel.find({ isDeleted: false }).select('locationId -_id');
+  return locations.map(l => l.locationId);
+}
 module.exports = {
   createLocationService,
   getLocationByIdService,
   getAllLocationsService,
   updateLocationService,
-softDeleteLocationService
+softDeleteLocationService,
+AllLocationId
     
 };

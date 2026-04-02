@@ -10,6 +10,7 @@ const productSchema = new mongoose.Schema(
     // --- NAMES & DESCRIPTIONS ---
     productName: { type: String, trim: true, required: true },
     internalName: { type: String, trim: true },
+    categoryId:{ type: String },
     brandName: { type: String, trim: true },
     description: { type: String },
     longDescription: { type: String },

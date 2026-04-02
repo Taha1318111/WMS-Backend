@@ -7,5 +7,6 @@ router.get("/GetAllLocations", location.getAllLocations);
 router.get("/GetLocationById/:locationId", location.getLocationById);
 router.put("/UpdateLocation/:locationId", location.updateLocation);
 router.delete("/DeleteLocation/:locationId", location.softDeleteLocation);  
+router.get("/AllLocationId", location.getAllLocationsId);
 
 module.exports = router;

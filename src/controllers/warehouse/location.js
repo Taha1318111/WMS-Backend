@@ -3,7 +3,7 @@ const { getLocationByIdService } = require("../../services/Warehouse/location");
 const { getAllLocationsService } = require("../../services/Warehouse/location");
 const { updateLocationService } = require("../../services/Warehouse/location");
 const { softDeleteLocationService } = require("../../services/Warehouse/location");
-
+const { AllLocationId } = require("../../services/Warehouse/location");
 
 const createLocation = async (req, res) => {
     try {
@@ -105,10 +105,23 @@ const softDeleteLocation = async (req, res) => {
     });
   }
 };
+
+const getAllLocationsId = async (req, res) => {
+  try {
+    const locationIds = await  AllLocationId();
+    res.status(200).json({ locationIds });
+  } catch (error) {
+    res.status(500).json({ message: error.message });   
+  }
+};
+
+
+
 module.exports = {
     createLocation,
     getLocationById,
     getAllLocations,
     updateLocation,
-    softDeleteLocation  
+    softDeleteLocation,
+    getAllLocationsId
 };
